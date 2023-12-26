@@ -1,0 +1,31 @@
+# Disable shotdown when close window
+
+```shell
+sudo nano /etc/systemd/logind.conf
+```
+
+> Uncoment an set to ignore
+
+```shell
+HandleLidSwitch=ignore
+HandleLidSwitchExternalPower=ignore
+HandleLidSwitchDocked=ignore
+```
+
+> Restart systemctl
+
+```shell
+sudo systemctl restart systemd-logind.service
+```
+
+> Window time
+
+```shell
+sudo nano /etc/default/grub
+```
+
+> Set
+
+```shell
+GRUB_CMDLINE_LINUX="consoleblanck=300"
+```
