@@ -1,0 +1,114 @@
+# Plex
+
+Plex organizes video, music and photos from personal media libraries and streams them to smart TVs, streaming boxes and mobile devices. This container is packaged as a standalone Plex Media Server. has always been a top priority. Straightforward design and bulk actions mean getting things done faster.
+
+## Installation
+
+import { Tabs } from 'nextra/components'
+ 
+<Tabs items={['CasaOs', 'Docker']}>
+  <Tabs.Tab>
+  ```yaml filename="plex.yaml"  copy
+name: plex
+services:
+  plex:
+    cpu_shares: 90
+    command: []
+    container_name: plex
+    deploy:
+      resources:
+        limits:
+          memory: 7850M
+        reservations:
+          memory: "268435456"
+    devices:
+      - /dev/dri:/dev/dri
+      - /dev/dvb:/dev/dvb
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - VERSION=docker
+    image: linuxserver/plex:version-1.29.2.6364-6d72b0cf6
+    labels:
+      icon: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Plex/icon.png
+    privileged: true
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData/plex/config
+        target: /config
+      - type: bind
+        source: /DATA/Media
+        target: /Media
+    x-casaos:
+      envs:
+        - container: PUID
+          description:
+            en_us: Run Plex as specified uid.
+            zh_cn: 以指定的uid运行Plex
+        - container: PGID
+          description:
+            en_us: Run Plex as specified gid.
+            zh_cn: 以指定的gid运行Plex
+        - container: VERSION
+          description:
+            en_us: Let Docker handle the Plex Version
+            zh_cn: 让Docker处理Plex版本
+      volumes:
+        - container: /config
+          description:
+            en_us: Plex config directory.
+            zh_cn: Plex配置目录
+        - container: /Media
+          description:
+            en_us: Plex Media directory.
+            zh_cn: Plex媒体目录
+    ports: []
+    cap_add: []
+    network_mode: host
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  author: CasaOS Team
+  category: Media
+  developer: Plex
+  hostname: ""
+  icon: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Plex/icon.png
+  index: /web/index.html
+  main: plex
+  port_map: "32400"
+  scheme: http
+  screenshot_link:
+    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Plex/screenshot-1.png
+    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Plex/screenshot-2.png
+    - https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Plex/screenshot-3.png
+  store_app_id: plex
+  tagline:
+    ar_sa: المنزل لجميع الترفيه الخاص بك.
+    de_de: Das Zuhause für Ihre Unterhaltung.
+    en_us: The home for all your entertainment.
+    es_es: El hogar de toda tu entretenimiento.
+    fr_fr: Le foyer de votre divertissement.
+    hu_hu: A szórakozás otthona.
+    it_it: Il tuo punto di riferimento per il divertimento.
+    pl_pl: Dom dla wszystkich Twoich rozrywek.
+    pt_br: O lar para toda a sua diversão.
+    ru_ru: Дом для всего вашего развлечения.
+    sv_se: Hemmet för all din underhållning.
+    uk_ua: Дім для всього вашого розваги.
+    zh_cn: 为您的娱乐提供家庭。
+  thumbnail: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Plex/thumbnail.png
+  tips: {}
+  title:
+    custom: ""
+    en_us: Plex
+
+  ```
+   </Tabs.Tab>
+  <Tabs.Tab>
+  ```yaml filename="docker-compose.yaml" copy
+    
+  ```
+  </Tabs.Tab>
+</Tabs>
