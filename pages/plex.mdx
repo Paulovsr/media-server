@@ -108,7 +108,23 @@ x-casaos:
    </Tabs.Tab>
   <Tabs.Tab>
   ```yaml filename="docker-compose.yaml" copy
-    
+version: "2.1"
+services:
+  plex:
+    image: lscr.io/linuxserver/plex:version-1.29.2.6364-6d72b0cf6
+    container_name: plex
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Sao_Paulo
+      - VERSION=docker
+    volumes:
+      - /DATA/AppData/plex/config:/config
+      - /DATA/Media:/media
+    ports:
+      - 32400:32400
+    restart: unless-stopped
   ```
   </Tabs.Tab>
 </Tabs>
