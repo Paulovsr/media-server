@@ -1,0 +1,140 @@
+# [Rclone](https://rclone.org/)
+
+Rclone is a command-line program to manage files on cloud storage. It is a feature-rich alternative to cloud vendors' web storage interfaces.
+
+## Installation
+ 
+import { Steps } from 'nextra/components'
+ 
+<Steps>
+### Step 1
+ 
+Install curl
+```command copy
+sudo apt-get update && apt install curl
+```
+ 
+### Step 2
+ 
+Install Rclone
+```command copy
+sudo -v ; curl https://rclone.org/install.sh | sudo bash
+```
+
+### Step 3
+ 
+Configure Rclone
+```command copy
+rclone config
+```
+
+When get this message:
+
+> Use web browser to automatically authenticate rclone with remote?
+>  * Say Y if the machine running rclone has a web browser you can use
+>  * Say N if running rclone on a (remote) machine without web browser access
+> If not sure try Y. If Y failed, try N.
+
+Say N if running rclone on a (remote) machine without web browser access
+
+Copy and paste the command in a machine with web browser access
+
+```command copy
+rclone authorize "onedrive"
+```
+
+It will redirect to Auth page.
+Log in and authorize rclone for access.
+Copy code in command prompt and past in remote machine.
+
+```command copy
+Paste the following into your remote machine --->
+{"access_token":"...","expiry":"0000-00-00T00:00:00.000000-03:00"}
+<---End paste
+```
+
+### Step 4
+ 
+Mount the remote as file system.
+
+> 'path/to/local/mount' is an empty existing directory:
+
+```command copy
+rclone --vfs-cache-mode writes mount onePaulo: /DATA/OneDrive/onePaulo
+```
+
+### Step 5
+ 
+mount as hd
+
+```command copy
+nano /etc/systemd/system/onePaulo.service
+```
+
+```command copy
+[Unit]
+Description=Mount and cache OneDrive to /DATA/OneDrive/onePaulo
+After=syslog.target local-fs.target network.target
+[Service]
+Environment=RCLONEHOME=/DATA/AppData/rclone/.config/rclone/
+Environment=MOUNTTO=/DATA/OneDrive/onePaulo
+Environment=LOGS=/DATA/AppData/rclone/logs
+Environment=UPLOADS=/DATA/AppData/rclone/uploads
+Type=simple
+User=root
+ExecStartPre=/bin/mkdir -p ${MOUNTTO}
+ExecStartPre=/bin/mkdir -p ${LOGS}
+ExecStartPre=/bin/mkdir -p ${UPLOADS}
+ExecStart=/usr/bin/rclone mount \
+  --log-file ${LOGS}/rclone.log \
+  --log-level INFO \
+  --vfs-cache-mode=writes \
+  --cache-dir ${UPLOADS} \
+  --config ${RCLONEHOME}/rclone.conf \
+  --dir-perms 0775 \
+  --file-perms 0666 \
+  --gid 1000 \
+  --uid 1000 \
+  --allow-other \
+ onePaulo: ${MOUNTTO}
+ExecStop=/bin/fusermount -u -z ${MOUNTTO}
+ExecStop=/bin/rmdir ${MOUNTTO}
+Restart=always
+[Install]
+WantedBy=multi-user.target
+```
+
+Command to enable an initialize the mount
+
+```command copy
+systemctl enable --now onePaulo.service
+```
+
+Test 
+
+```command copy
+df -h
+```
+
+</Steps>
+
+
+## Useful commands
+
+Show all remotes
+
+```command copy
+rclone listremotes
+```
+
+List dirs of a remote
+
+```command copy
+rclone lsd remote:
+```
+
+List files
+
+```command copy
+rclone ls remote:
+```
