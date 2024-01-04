@@ -1,6 +1,9 @@
 {
   "index": "Introduction",
   "ubuntu": "Ubuntu Server",
+  "duck-dns": "Duck DNS",
+  "open-vpn": "Open VPN",
   "casaos": "CasaOS",
-  "plex": "Plex"
+  "plex": "Plex",
+  "rclone": "Rclone"
 }
